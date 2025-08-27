@@ -1,0 +1,3 @@
+rootProject.name = 'RiveMC-Guilds'
+include 'Guilds-API'
+include 'Guilds-Velocity'
