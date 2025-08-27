@@ -38,14 +38,10 @@ public final class GuildStorageFactory implements StorageFactory<UUID, Guild<Pla
             case MONGO -> {
                 return new MongoGuildStorage(plugin, cfg.node("storage","connection","mongo"));
             }
-            case SQLITE -> {
-                throw new UnsupportedOperationException("SQLite storage is not implemented yet.");
-                //return new SQLiteGuildStorage(cfg.getConfigurationSection("storage.connection.sqlite"));
-            }
-            case MY_SQL -> {
-                throw new UnsupportedOperationException("MySQL storage is not implemented yet.");
-                //return new MySQLGuildStorage(cfg.getConfigurationSection("storage.connection.mysql"));
-            }
+            case SQLITE -> //return new SQLiteGuildStorage(cfg.getConfigurationSection("storage.connection.sqlite"));
+                    throw new UnsupportedOperationException("SQLite storage is not implemented yet.");
+            case MY_SQL -> //return new MySQLGuildStorage(cfg.getConfigurationSection("storage.connection.mysql"));
+                    throw new UnsupportedOperationException("MySQL storage is not implemented yet.");
             default -> {
                 return DEV_STORAGE;
             }
