@@ -104,7 +104,7 @@ public class MongoGuildStorage extends BaseGuildStorage {
 
 
     @Override
-    public CompletableFuture<Guild> save(@NotNull Guild data) {
+    public CompletableFuture<Guild<Player>> save(@NotNull Guild<Player> data) {
         return CompletableFuture.supplyAsync(() -> {
             var collection = database.getCollection(MAIN_COLLECTION_NAME);
             var document = guildObjectAdapter.toDocument(data);

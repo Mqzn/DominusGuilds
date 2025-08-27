@@ -2,7 +2,6 @@ package com.rivemc.guilds.database;
 
 import com.rivemc.guilds.Guild;
 import com.rivemc.guilds.RiveGuilds;
-import com.rivemc.guilds.config.Config;
 import com.rivemc.guilds.database.storage.EmptyGuildStorage;
 import com.rivemc.guilds.database.storage.MongoGuildStorage;
 

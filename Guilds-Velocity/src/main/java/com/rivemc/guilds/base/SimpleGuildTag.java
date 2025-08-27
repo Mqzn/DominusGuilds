@@ -2,7 +2,6 @@ package com.rivemc.guilds.base;
 
 import com.rivemc.guilds.GuildTag;
 
-import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 /**
