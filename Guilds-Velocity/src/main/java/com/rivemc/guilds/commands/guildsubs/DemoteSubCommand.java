@@ -1,10 +1,6 @@
 package com.rivemc.guilds.commands.guildsubs;
 
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.*;
 import com.rivemc.guilds.Guild;
 import com.rivemc.guilds.GuildMember;
 import com.rivemc.guilds.GuildRole;
@@ -33,15 +29,11 @@ public class DemoteSubCommand {
     }
 
     @Usage
-    public void demote(VelocitySource source, @Named("target") Player target) {
+    public void demote(VelocitySource source, @Named("target") Player target, @ContextResolved Guild<Player> sourceGuild) {
         if (source == target) return;
 
         // Check if source is in a guild.
-        Optional<Guild<Player>> sourceGuildOptional = plugin.getGuildManager().getPlayerGuild(source.uuid());
-        if (sourceGuildOptional.isEmpty()) {
-            source.reply("<red>You have to be in a guild to perform this command.");
-            return;
-        }
+        
         // Check if target is in a guild.
         Optional<Guild<Player>> targetGuildOptional = plugin.getGuildManager().getPlayerGuild(target.getUniqueId());
         if (targetGuildOptional.isEmpty()) {
@@ -49,7 +41,6 @@ public class DemoteSubCommand {
             return;
         }
 
-        Guild<Player> sourceGuild = sourceGuildOptional.get();
         Guild<Player> targetGuild = targetGuildOptional.get();
 
         // Check if target is in the same guild as source.

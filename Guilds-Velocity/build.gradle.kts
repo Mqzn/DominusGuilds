@@ -50,6 +50,7 @@ dependencies {
     implementation("com.alessiodp.libby:libby-velocity:2.0.0-SNAPSHOT")
 
     compileOnly("studio.mevera:imperat-core:2.1.0-SNAPSHOT")
+    compileOnly("studio.mevera:imperat-adventure:2.1.0-SNAPSHOT")
     compileOnly("studio.mevera:imperat-velocity:2.1.0-SNAPSHOT")
 
     compileOnly("org.mongodb:mongodb-driver-sync:5.3.1")
@@ -73,6 +74,6 @@ tasks.named<ShadowJar>("shadowJar") {
     relocate("studio.mevera", "com.rivemc.guilds.libs.studio.mevera")
     relocate("com.mongodb", "com.rivemc.guilds.libs.com.mongodb")
     relocate("org.bson", "com.rivemc.guilds.libs.org.bson")
-    relocate("net.kyori", "com.rivemc.guilds.libs.net.kyori")
+    //relocate("net.kyori", "com.rivemc.guilds.libs.net.kyori")
     relocate("com.github.benmanes.caffeine", "com.rivemc.guilds.libs.com.github.benmanes.caffeine")
 }

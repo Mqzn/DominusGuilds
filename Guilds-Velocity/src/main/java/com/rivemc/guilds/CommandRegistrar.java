@@ -21,8 +21,9 @@ public class CommandRegistrar {
                 .sourceResolver(VelocityPlayer.class, VelocityPlayer::new)
                 .parameterType(new TypeWrap<GuildMember<Player>>(){}.getType(), new GuildMemberParameterType(plugin))
                 .parameterType(Duration.class, new DurationParameterType())
-                .contextResolver(Guild.class, new GuildContextResolver(plugin))
+                .contextResolver(new TypeWrap<Guild<Player>>(){}.getType(), new GuildContextResolver(plugin))
                 .dependencyResolver(RiveGuilds.class, () -> plugin)
+                .dependencyResolver(GuildCommand.class, ()-> new GuildCommand(plugin))
                 .build();
     }
 

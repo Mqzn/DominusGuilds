@@ -8,6 +8,9 @@ import studio.mevera.imperat.VelocitySource;
 import studio.mevera.imperat.annotations.*;
 import com.rivemc.guilds.base.SimpleGuildOwnerInfo;
 import com.velocitypowered.api.proxy.Player;
+import studio.mevera.imperat.command.tree.help.CommandHelp;
+import studio.mevera.imperat.command.tree.help.HelpFilters;
+import studio.mevera.imperat.command.tree.help.HelpQuery;
 
 @Command(value = {"guild", "g", "clan", "c"})
 @Description("Guild management commands")
@@ -64,17 +67,17 @@ public class GuildCommand {
                 .onSuccess(guild -> source.reply("<green>Successfully created guild '" + guildName + "'"))
                 .onError(error -> source.error("Failed to create guild: " + error.getMessage()));
     }
-
-    @Description("Show guild information or help")
+    
     @Usage
-    public void defaultCommand(VelocitySource source, @Optional Guild<Player> guild) {
-        if (guild != null) {
-            // Show guild info if player is in a guild
-            source.reply("Guild: " + guild.getName());
-            source.reply("Members: " + guild.getMembers().size());
-        } else {
-            // Show help if not in a guild
-            source.reply("Use /guild create <name> to create a guild or /guild help for more commands");
-        }
+    
+    @Description("Show guild information or help")
+    public void defaultCommand(VelocitySource source, CommandHelp<VelocitySource> help) {
+        help.display(
+                HelpQuery.<VelocitySource>builder()
+                        .filter(HelpFilters.hasPermission(source, help))
+                        .build(),
+                
+                new GuildHelpTheme()
+        );
     }
 }
