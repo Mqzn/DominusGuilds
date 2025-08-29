@@ -1,5 +1,0 @@
-server: ""
-redis:
-  enabled: false
-  host: "redis://127.0.0.1:7181"
-  database: "rive-guilds"

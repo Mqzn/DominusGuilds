@@ -36,12 +36,12 @@ public class MongoGuildStorage extends BaseGuildStorage {
         this.guildObjectAdapter = new MongoDocumentGuildAdapter(plugin);
     }
     private MongoClient createClient(ConfigurationNode section) {
-        ConnectionString connectionString = new ConnectionString(section.getString("connection-url"));
+        ConnectionString connectionString = new ConnectionString(section.node("connection-url").getString(""));
         return MongoClients.create(connectionString);
     }
 
     private MongoDatabase initializeDatabase(ConfigurationNode section) {
-        String dbName = section.getString("database");
+        String dbName = section.node("database").getString("");
 
         // Check/create collection once during initialization
         return client.getDatabase(dbName);

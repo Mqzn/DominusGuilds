@@ -32,7 +32,7 @@ public final class RiveGuilds {
     private final Logger logger;
     private final ProxyServer server;
     private final Path dataDirectory;
-    private ConfigurationNode config;
+    private ConfigurationNode config, dbConfig;
     
     private DistinctTagTracker tagTracker;
     private SimpleGuildManager guildManager;
@@ -58,13 +58,14 @@ public final class RiveGuilds {
     
     private void initializeConfigurations() {
         loadMainConfig();
+        loadDatabaseConfig();
     }
     
     private void loadMainConfig() {
         try {
             Path configPath = dataDirectory.resolve("config.yml");
             if (!Files.exists(configPath)) {
-                copyDefaultConfig(configPath);
+                copyDefaultConfig("config.yml", configPath);
             }
             
             ConfigurationLoader<CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
@@ -76,8 +77,27 @@ public final class RiveGuilds {
         }
     }
     
-    private void copyDefaultConfig(Path configPath) throws IOException {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("config.yml")) {
+    //method to load "database.yml" just like config.yml.
+    
+    private void loadDatabaseConfig() {
+        try {
+            Path dbConfigPath = dataDirectory.resolve("database.yml");
+            if (!Files.exists(dbConfigPath)) {
+                copyDefaultConfig("database.yml", dbConfigPath);
+            }
+            
+            ConfigurationLoader<CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
+                    .path(dbConfigPath)
+                    .build();
+            dbConfig = loader.load();
+            // Use dbConfig as needed
+        } catch (IOException e) {
+            logger.error("Failed to load database.yml", e);
+        }
+    }
+    
+    private void copyDefaultConfig(String fileName, Path configPath) throws IOException {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName)) {
             if (is != null) {
                 Files.copy(is, configPath);
             }
@@ -97,9 +117,9 @@ public final class RiveGuilds {
         //do database first
         GuildStorageFactory storageFactory = new GuildStorageFactory(this);
         try {
-            GuildStorage<Player> storage = (GuildStorage<Player>) storageFactory.createStorage(config);
+            GuildStorage<Player> storage = (GuildStorage<Player>) storageFactory.createStorage(dbConfig);
             this.tagTracker = new SimpleDistinctTagTracker();
-            this.guildManager = new SimpleGuildManager(this, storage, tagTracker, config);
+            this.guildManager = new SimpleGuildManager(this, storage, tagTracker);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

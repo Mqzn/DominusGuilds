@@ -9,6 +9,8 @@ import com.rivemc.guilds.util.GuildMessageFormatter;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.kyori.adventure.text.Component;
 
 import java.util.Optional;
@@ -46,7 +48,10 @@ public class ChatListener {
         event.setResult(PlayerChatEvent.ChatResult.denied());
 
         //we call the local guild chat event here
-        GuildChatEvent guildChatEvent = new GuildChatEvent(sourceGuild, plugin.getConfig().getString("server"), player.getUniqueId(),
+        GuildChatEvent guildChatEvent = new GuildChatEvent(
+                sourceGuild, player.getCurrentServer().map(ServerConnection::getServerInfo)
+                .map(ServerInfo::getName)
+                .orElseThrow(), player.getUniqueId(),
                 event.getMessage());
         //we call the event, so other plugins can listen to it
         plugin.getServer().getEventManager().fire(guildChatEvent);

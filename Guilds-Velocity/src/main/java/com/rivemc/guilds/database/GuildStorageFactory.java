@@ -33,7 +33,8 @@ public final class GuildStorageFactory implements StorageFactory<UUID, Guild<Pla
 
     @Override
     public @NotNull Storage<UUID, Guild<Player>> createStorage(@NotNull ConfigurationNode cfg) throws Exception {
-        final Storage.Type type = Storage.Type.valueOf(cfg.getString("storage.type").toUpperCase(Locale.ENGLISH));
+        final Storage.Type type = Storage.Type.valueOf(cfg.node("storage", "type").getString(Storage.Type.EMPTY.name())
+                .toUpperCase(Locale.ENGLISH));
         switch (type) {
             case MONGO -> {
                 return new MongoGuildStorage(plugin, cfg.node("storage","connection","mongo"));

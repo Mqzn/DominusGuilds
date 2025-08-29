@@ -29,7 +29,6 @@ public final class SimpleGuildManager implements GuildManager<Player> {
     private final Logger logger;
     private final GuildStorage<Player> storage;
     private final DistinctTagTracker distinctTagTracker;
-    private final ConfigurationNode config;
     final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     final Cache<UUID, Guild<Player>> guildsByUUID;
@@ -41,15 +40,13 @@ public final class SimpleGuildManager implements GuildManager<Player> {
     public SimpleGuildManager(
             RiveGuilds plugin,
             GuildStorage<Player> storage,
-            DistinctTagTracker distinctTagTracker,
-            ConfigurationNode config
+            DistinctTagTracker distinctTagTracker
     ) {
         this.plugin = plugin;
         this.server = plugin.getServer();
         this.logger = plugin.getLogger();
         this.storage = storage;
         this.distinctTagTracker = distinctTagTracker;
-        this.config = config;
 
         this.guildsByUUID = setupGuildCache();
         this.guildsByName = setupNameCache();
