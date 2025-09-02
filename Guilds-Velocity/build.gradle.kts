@@ -21,10 +21,6 @@ repositories {
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
 
-    //add oss repo for velocity
-
-
-
     maven {
         name = "libby-repo"
         url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")

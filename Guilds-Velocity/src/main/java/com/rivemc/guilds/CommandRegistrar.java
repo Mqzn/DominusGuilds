@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import studio.mevera.imperat.util.TypeWrap;
 
 import java.time.Duration;
+import java.util.stream.Collectors;
 
 public class CommandRegistrar {
     
@@ -24,6 +25,15 @@ public class CommandRegistrar {
                 .contextResolver(new TypeWrap<Guild<Player>>(){}.getType(), new GuildContextResolver(plugin))
                 .dependencyResolver(RiveGuilds.class, () -> plugin)
                 .dependencyResolver(GuildCommand.class, ()-> new GuildCommand(plugin))
+                .namedSuggestionResolver("non-guild-players", (context, name) -> {
+                    if (context.source().isConsole()) return server.getAllPlayers().stream().map(Player::getUsername).toList();
+                    Player sourcePlayer = context.source().asPlayer();
+                    return server.getAllPlayers().stream()
+                            .filter(p -> !p.getUniqueId().equals(sourcePlayer.getUniqueId()))
+                            .filter(p -> plugin.getGuildManager().getPlayerGuild(p).isEmpty())
+                            .map(Player::getUsername)
+                            .collect(Collectors.toList());
+                })
                 .build();
     }
 

@@ -143,6 +143,7 @@ public final class RiveGuilds {
             injectDependencies();
             registerEventListeners();
             registerCommands();
+            logger.info("Enabled RiveGuilds v1.0.0-SNAPSHOT successfully!");
         } catch (Exception e) {
             logger.error("Failed to initialize RiveGuilds", e);
         }

@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Guilds-API" />
+            <option value="$PROJECT_DIR$/Guilds-Bukkit" />
             <option value="$PROJECT_DIR$/Guilds-Velocity" />
           </set>
         </option>
