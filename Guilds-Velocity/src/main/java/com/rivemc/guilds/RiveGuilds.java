@@ -69,7 +69,7 @@ public final class RiveGuilds {
                 copyDefaultConfig("config.yml", configPath);
             }
             
-            ConfigurationLoader<CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
+            ConfigurationLoader<@org.jetbrains.annotations.NotNull CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
                     .path(configPath)
                     .build();
             config = loader.load();
@@ -87,7 +87,7 @@ public final class RiveGuilds {
                 copyDefaultConfig("database.yml", dbConfigPath);
             }
             
-            ConfigurationLoader<CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
+            ConfigurationLoader<@org.jetbrains.annotations.NotNull CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
                     .path(dbConfigPath)
                     .build();
             dbConfig = loader.load();
