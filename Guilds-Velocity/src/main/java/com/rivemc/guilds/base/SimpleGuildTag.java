@@ -1,7 +1,6 @@
 package com.rivemc.guilds.base;
 
 import com.rivemc.guilds.GuildTag;
-
 import org.jetbrains.annotations.NotNull;
 
 /**

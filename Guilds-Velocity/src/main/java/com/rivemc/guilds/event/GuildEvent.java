@@ -1,8 +1,8 @@
 package com.rivemc.guilds.event;
 
-import lombok.Getter;
 import com.rivemc.guilds.Guild;
 import com.velocitypowered.api.proxy.Player;
+import lombok.Getter;
 
 /**
  * Base class for all guild-related events in the Velocity environment.

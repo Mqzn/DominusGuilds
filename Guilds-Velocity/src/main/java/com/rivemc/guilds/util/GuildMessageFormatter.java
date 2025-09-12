@@ -3,9 +3,9 @@ package com.rivemc.guilds.util;
 import com.rivemc.guilds.Guild;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 /**
  * Utility class for formatting guild chat messages using MiniMessage format.

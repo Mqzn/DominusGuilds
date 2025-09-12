@@ -1,21 +1,26 @@
 package com.rivemc.guilds.database.mongo;
 
-import com.rivemc.guilds.*;
-import com.rivemc.guilds.base.SimpleGuildOwnerInfo;
+import com.rivemc.guilds.Guild;
+import com.rivemc.guilds.GuildMember;
+import com.rivemc.guilds.GuildRole;
+import com.rivemc.guilds.GuildTag;
+import com.rivemc.guilds.RiveGuilds;
 import com.rivemc.guilds.base.SimpleGuild;
 import com.rivemc.guilds.base.SimpleGuildColor;
 import com.rivemc.guilds.base.SimpleGuildMember;
+import com.rivemc.guilds.base.SimpleGuildOwnerInfo;
 import com.rivemc.guilds.base.SimpleGuildRole;
 import com.rivemc.guilds.base.SimpleGuildTag;
-import net.kyori.adventure.text.format.TextColor;
-import org.bson.Document;
 import com.velocitypowered.api.proxy.Player;
+import org.bson.Document;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Mqzen
@@ -55,6 +60,9 @@ public final class MongoDocumentGuildAdapter implements MongoDocumentObjectAdapt
         }
         document.put("members", membersDoc);
 
+        document.put("allies", guild.getAlliedGuilds().stream().map(UUID::toString).toList());
+        document.put("enemies", guild.getEnemyGuilds().stream().map(UUID::toString).toList());
+
         return document;
     }
 
@@ -88,7 +96,17 @@ public final class MongoDocumentGuildAdapter implements MongoDocumentObjectAdapt
             }
         }
 
-        return new SimpleGuild(plugin, id, name, foundationDate, tag, ownerInfo, members, roles);
+        //create set for allies and enemies, load them from the list of document
+        List<String> alliesList = document.getList("allies", String.class);
+        List<String> enemiesList = document.getList("enemies", String.class);
+
+        Set<UUID> alliesGuilds = alliesList.stream().map(UUID::fromString)
+                .collect(Collectors.toSet());
+
+        Set<UUID> enemiesGuilds = enemiesList.stream().map(UUID::fromString)
+                .collect(Collectors.toSet());
+
+        return new SimpleGuild(plugin, id, name, foundationDate, tag, ownerInfo, members, roles, alliesGuilds, enemiesGuilds);
     }
 
     static class MongoDocumentGuildTagAdapter implements MongoDocumentObjectAdapter<GuildTag> {

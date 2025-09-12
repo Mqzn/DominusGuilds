@@ -1,6 +1,7 @@
 package com.rivemc.guilds;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;

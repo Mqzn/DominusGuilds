@@ -1,6 +1,13 @@
 package com.rivemc.guilds.commands.guildsubs;
 
+import com.rivemc.guilds.Guild;
+import com.rivemc.guilds.GuildMOTD;
+import com.rivemc.guilds.RiveGuilds;
+import com.rivemc.guilds.base.SimpleGuildMOTD;
 import com.rivemc.guilds.commands.VelocityPlayer;
+import com.rivemc.guilds.database.GuildUpdateAction;
+import com.rivemc.guilds.util.DurationParser;
+import com.velocitypowered.api.proxy.Player;
 import studio.mevera.imperat.annotations.ContextResolved;
 import studio.mevera.imperat.annotations.Default;
 import studio.mevera.imperat.annotations.Dependency;
@@ -9,13 +16,6 @@ import studio.mevera.imperat.annotations.Greedy;
 import studio.mevera.imperat.annotations.Named;
 import studio.mevera.imperat.annotations.SubCommand;
 import studio.mevera.imperat.annotations.Usage;
-import com.rivemc.guilds.Guild;
-import com.rivemc.guilds.GuildMOTD;
-import com.rivemc.guilds.RiveGuilds;
-import com.rivemc.guilds.base.SimpleGuildMOTD;
-import com.rivemc.guilds.database.GuildUpdateAction;
-import com.rivemc.guilds.util.DurationParser;
-import com.velocitypowered.api.proxy.Player;
 
 import java.time.Duration;
 

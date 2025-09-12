@@ -3,7 +3,6 @@ package com.rivemc.guilds.commands;
 import com.rivemc.guilds.Guild;
 import com.rivemc.guilds.GuildMember;
 import com.rivemc.guilds.RiveGuilds;
-
 import com.velocitypowered.api.proxy.Player;
 import studio.mevera.imperat.VelocitySource;
 import studio.mevera.imperat.command.parameters.type.BaseParameterType;

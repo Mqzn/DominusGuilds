@@ -1,16 +1,27 @@
 package com.rivemc.guilds.base;
 
-import com.rivemc.guilds.*;
+import com.rivemc.guilds.Guild;
+import com.rivemc.guilds.GuildInviteList;
+import com.rivemc.guilds.GuildMOTD;
+import com.rivemc.guilds.GuildManager;
+import com.rivemc.guilds.GuildMember;
+import com.rivemc.guilds.GuildOwnerInfo;
+import com.rivemc.guilds.GuildRole;
+import com.rivemc.guilds.GuildTag;
+import com.rivemc.guilds.RiveGuilds;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -35,6 +46,8 @@ public final class SimpleGuild implements Guild<Player> {
     private final Map<UUID, GuildRole> rolesById;
     private final Map<String, GuildRole> rolesByName = new HashMap<>();
 
+    private final Set<UUID> allies, enemies;
+
     private final GuildInviteList<Player> inviteList;
 
     private @Nullable GuildMOTD guildMOTD = null;
@@ -45,7 +58,9 @@ public final class SimpleGuild implements Guild<Player> {
             UUID id, String name, Date foundationDate,
             GuildTag tag, GuildOwnerInfo owner,
             Map<UUID, GuildMember<Player>> members,
-            Map<UUID, GuildRole> rolesById
+            Map<UUID, GuildRole> rolesById,
+            Set<UUID> allies,
+            Set<UUID> enemies
     ) {
         this.plugin = plugin;
         this.id = id;
@@ -68,10 +83,13 @@ public final class SimpleGuild implements Guild<Player> {
             this.members.put(owner.getUUID(), ownerMember);
         }
         this.inviteList = new SimpleGuildInviteList(this, plugin);
+
+        this.allies = allies != null ? new HashSet<>(allies) : new HashSet<>();
+        this.enemies = enemies != null ? new HashSet<>(enemies) : new HashSet<>();
     }
 
     public SimpleGuild(RiveGuilds plugin, String name, GuildOwnerInfo owner) {
-        this(plugin, UUID.randomUUID(), name, new Date(), SimpleGuildTag.DEFAULT_TAG, owner, new HashMap<>(), DefaultGuildRole.ALL);
+        this(plugin, UUID.randomUUID(), name, new Date(), SimpleGuildTag.DEFAULT_TAG, owner, new HashMap<>(), DefaultGuildRole.ALL, new HashSet<>(), new HashSet<>());
     }
 
     private void calculateDefaultRole() {
@@ -348,6 +366,16 @@ public final class SimpleGuild implements Guild<Player> {
 
     }
 
+    @Override
+    public @NotNull Set<UUID> getAlliedGuilds() {
+        return allies;
+    }
+
+    @Override
+    public @NotNull Set<UUID> getEnemyGuilds() {
+        return enemies;
+    }
+
     /**
      * Removes a role from the guild by its name.
      * @param name the name of the role to be removed must not be null.
@@ -394,7 +422,7 @@ public final class SimpleGuild implements Guild<Player> {
     @Override
     public Guild<Player> copy() {
         return new SimpleGuild(this.plugin, this.id, this.name, this.foundationDate, this.tag, this.owner,
-                new HashMap<>(this.members), new HashMap<>(this.rolesById));
+                new HashMap<>(this.members), new HashMap<>(this.rolesById), new HashSet<>(this.allies), new HashSet<>(this.enemies));
     }
 
     @Override

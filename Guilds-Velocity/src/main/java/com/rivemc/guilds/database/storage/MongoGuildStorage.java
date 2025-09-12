@@ -12,7 +12,6 @@ import com.rivemc.guilds.RiveGuilds;
 import com.rivemc.guilds.database.BaseGuildStorage;
 import com.rivemc.guilds.database.mongo.MongoDocumentGuildAdapter;
 import com.rivemc.guilds.database.mongo.MongoDocumentObjectAdapter;
-
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurationNode;

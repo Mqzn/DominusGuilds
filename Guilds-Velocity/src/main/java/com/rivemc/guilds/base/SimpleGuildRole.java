@@ -2,6 +2,7 @@ package com.rivemc.guilds.base;
 
 import com.rivemc.guilds.GuildRole;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

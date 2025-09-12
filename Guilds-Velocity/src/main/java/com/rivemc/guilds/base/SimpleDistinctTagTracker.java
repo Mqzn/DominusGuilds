@@ -4,14 +4,21 @@ import com.rivemc.guilds.DistinctTagTracker;
 import com.rivemc.guilds.Guild;
 import com.rivemc.guilds.GuildTag;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleDistinctTagTracker implements DistinctTagTracker {
 
     private final Map<String, UUID> guildTags = new ConcurrentHashMap<>();
+
+    @Override
+    public @Nullable Optional<UUID> getGuildIdByTag(@NotNull String tag) {
+        return Optional.ofNullable(guildTags.get(tag));
+    }
 
     /**
      * Adds a distinct tag for a guild, using the guild's current tag's value and the guild's unique identifier.

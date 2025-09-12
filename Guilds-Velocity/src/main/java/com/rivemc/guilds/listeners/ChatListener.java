@@ -5,7 +5,6 @@ import com.rivemc.guilds.GuildMember;
 import com.rivemc.guilds.RiveGuilds;
 import com.rivemc.guilds.event.GuildChatEvent;
 import com.rivemc.guilds.util.GuildMessageFormatter;
-
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;

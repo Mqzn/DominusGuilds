@@ -1,13 +1,14 @@
 package com.rivemc.guilds.commands.guildsubs;
 
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.Usage;
 import com.rivemc.guilds.RiveGuilds;
 import com.velocitypowered.api.proxy.Player;
 import studio.mevera.imperat.VelocitySource;
+import studio.mevera.imperat.annotations.Dependency;
+import studio.mevera.imperat.annotations.Description;
+import studio.mevera.imperat.annotations.Named;
+import studio.mevera.imperat.annotations.SubCommand;
+import studio.mevera.imperat.annotations.Usage;
+
 import java.util.Optional;
 
 @SubCommand("deny")

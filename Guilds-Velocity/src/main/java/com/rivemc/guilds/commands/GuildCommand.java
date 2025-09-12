@@ -1,13 +1,36 @@
 package com.rivemc.guilds.commands;
 
-import com.rivemc.guilds.Guild;
 import com.rivemc.guilds.GuildOwnerInfo;
 import com.rivemc.guilds.RiveGuilds;
-import com.rivemc.guilds.commands.guildsubs.*;
-import studio.mevera.imperat.VelocitySource;
-import studio.mevera.imperat.annotations.*;
 import com.rivemc.guilds.base.SimpleGuildOwnerInfo;
+import com.rivemc.guilds.commands.guildsubs.AllySubCommand;
+import com.rivemc.guilds.commands.guildsubs.ChatSubCommand;
+import com.rivemc.guilds.commands.guildsubs.DemoteSubCommand;
+import com.rivemc.guilds.commands.guildsubs.DenyInviteSubCommand;
+import com.rivemc.guilds.commands.guildsubs.EnemySubCommand;
+import com.rivemc.guilds.commands.guildsubs.FindSubCommand;
+import com.rivemc.guilds.commands.guildsubs.InfoSubCommand;
+import com.rivemc.guilds.commands.guildsubs.InviteSubCommand;
+import com.rivemc.guilds.commands.guildsubs.JoinGuildSubCommand;
+import com.rivemc.guilds.commands.guildsubs.KickSubCommand;
+import com.rivemc.guilds.commands.guildsubs.LeaveSubCommand;
+import com.rivemc.guilds.commands.guildsubs.ListSubCommand;
+import com.rivemc.guilds.commands.guildsubs.MOTDSubCommand;
+import com.rivemc.guilds.commands.guildsubs.PermissionsSubCommand;
+import com.rivemc.guilds.commands.guildsubs.PromoteSubCommand;
+import com.rivemc.guilds.commands.guildsubs.RenameSubCommand;
+import com.rivemc.guilds.commands.guildsubs.SetRoleSubCommand;
+import com.rivemc.guilds.commands.guildsubs.TagColorSubCommand;
+import com.rivemc.guilds.commands.guildsubs.TagSubCommand;
+import com.rivemc.guilds.commands.guildsubs.ToggleSubCommand;
 import com.velocitypowered.api.proxy.Player;
+import studio.mevera.imperat.VelocitySource;
+import studio.mevera.imperat.annotations.Command;
+import studio.mevera.imperat.annotations.Description;
+import studio.mevera.imperat.annotations.ExternalSubCommand;
+import studio.mevera.imperat.annotations.Named;
+import studio.mevera.imperat.annotations.SubCommand;
+import studio.mevera.imperat.annotations.Usage;
 import studio.mevera.imperat.command.tree.help.CommandHelp;
 import studio.mevera.imperat.command.tree.help.HelpFilters;
 import studio.mevera.imperat.command.tree.help.HelpQuery;
@@ -32,7 +55,10 @@ import studio.mevera.imperat.command.tree.help.HelpQuery;
                 DenyInviteSubCommand.class,
                 ToggleSubCommand.class,
                 RenameSubCommand.class,
-                LeaveSubCommand.class
+                LeaveSubCommand.class,
+                KickSubCommand.class,
+                AllySubCommand.class,
+                EnemySubCommand.class,
         }
 )
 public class GuildCommand {

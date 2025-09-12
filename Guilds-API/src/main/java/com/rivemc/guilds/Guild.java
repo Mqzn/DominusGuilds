@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -186,6 +187,47 @@ public interface Guild<P> {
      */
     void removeRoleById(@NotNull UUID roleUUID);
 
+    /**
+     * Gets a set of UUIDs representing allied guilds.
+     * @return a set of UUIDs of allied guilds, never null.
+     */
+    @NotNull Set<UUID> getAlliedGuilds();
+
+    default boolean isAlliedWith(@NotNull UUID guildId) {
+        return getAlliedGuilds().contains(guildId);
+    }
+
+    default void allyWith(@NotNull Guild<P> guild) {
+        getAlliedGuilds().add(guild.getID());
+    }
+
+    default void unAllyWith(@NotNull Guild<P> guild) {
+        getAlliedGuilds().remove(guild.getID());
+    }
+
+    default boolean isNeutralWith(@NotNull Guild<P> guild) {
+        UUID guildId = guild.getID();
+        return !isAlliedWith(guildId) && !isEnemyWith(guildId);
+    }
+
+
+    /**
+     * Gets a set of UUIDs representing enemy guilds.
+     * @return a set of UUIDs of enemy guilds, never null.
+     */
+    @NotNull Set<UUID> getEnemyGuilds();
+
+    default void enemyWith(@NotNull Guild<P> guild) {
+        getEnemyGuilds().add(guild.getID());
+    }
+
+    default void unEnemyWith(@NotNull Guild<P> guild) {
+        getEnemyGuilds().remove(guild.getID());
+    }
+
+    default boolean isEnemyWith(@NotNull UUID guildId) {
+        return getEnemyGuilds().contains(guildId);
+    }
 
     //remove by name
     /**

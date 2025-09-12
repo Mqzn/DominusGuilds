@@ -1,10 +1,17 @@
 package com.rivemc.guilds;
 
-import com.rivemc.guilds.commands.*;
+import com.rivemc.guilds.commands.DurationParameterType;
+import com.rivemc.guilds.commands.GuildCommand;
+import com.rivemc.guilds.commands.GuildContextResolver;
+import com.rivemc.guilds.commands.GuildMemberParameterType;
+import com.rivemc.guilds.commands.GuildQueryResult;
+import com.rivemc.guilds.commands.GuildQueryResultParamType;
+import com.rivemc.guilds.commands.RequiredGuildPermissions;
+import com.rivemc.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.VelocityImperat;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
+import studio.mevera.imperat.VelocityImperat;
 import studio.mevera.imperat.util.TypeWrap;
 
 import java.time.Duration;
@@ -22,6 +29,7 @@ public class CommandRegistrar {
                 .sourceResolver(VelocityPlayer.class, VelocityPlayer::new)
                 .parameterType(new TypeWrap<GuildMember<Player>>(){}.getType(), new GuildMemberParameterType(plugin))
                 .parameterType(Duration.class, new DurationParameterType())
+                .parameterType(GuildQueryResult.class, new GuildQueryResultParamType(plugin))
                 .contextResolver(new TypeWrap<Guild<Player>>(){}.getType(), new GuildContextResolver(plugin))
                 .dependencyResolver(RiveGuilds.class, () -> plugin)
                 .dependencyResolver(GuildCommand.class, ()-> new GuildCommand(plugin))
@@ -39,6 +47,7 @@ public class CommandRegistrar {
 
     public void registerCommands() {
         //TODO register commands here
+        imperat.registerAnnotations(RequiredGuildPermissions.class);
         imperat.registerCommand(GuildCommand.class);
         logger.info("Registered guild commands");
     }

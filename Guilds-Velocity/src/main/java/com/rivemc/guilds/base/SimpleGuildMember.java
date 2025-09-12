@@ -5,6 +5,7 @@ import com.rivemc.guilds.GuildMember;
 import com.rivemc.guilds.GuildRole;
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.UUID;
 
 /**

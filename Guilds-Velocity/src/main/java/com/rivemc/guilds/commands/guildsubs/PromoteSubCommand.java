@@ -1,19 +1,20 @@
 package com.rivemc.guilds.commands.guildsubs;
 
+import com.rivemc.guilds.Guild;
+import com.rivemc.guilds.GuildMember;
+import com.rivemc.guilds.GuildRole;
+import com.rivemc.guilds.RiveGuilds;
+import com.rivemc.guilds.base.SimpleGuildMember;
 import com.rivemc.guilds.commands.VelocityPlayer;
+import com.rivemc.guilds.database.GuildUpdateAction;
+import com.velocitypowered.api.proxy.Player;
 import studio.mevera.imperat.annotations.ContextResolved;
 import studio.mevera.imperat.annotations.Dependency;
 import studio.mevera.imperat.annotations.Description;
 import studio.mevera.imperat.annotations.Named;
 import studio.mevera.imperat.annotations.SubCommand;
 import studio.mevera.imperat.annotations.Usage;
-import com.rivemc.guilds.Guild;
-import com.rivemc.guilds.GuildMember;
-import com.rivemc.guilds.GuildRole;
-import com.rivemc.guilds.RiveGuilds;
-import com.rivemc.guilds.base.SimpleGuildMember;
-import com.rivemc.guilds.database.GuildUpdateAction;
-import com.velocitypowered.api.proxy.Player;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

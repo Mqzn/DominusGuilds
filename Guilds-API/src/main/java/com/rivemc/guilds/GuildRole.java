@@ -1,7 +1,9 @@
 package com.rivemc.guilds;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,7 +34,6 @@ public interface GuildRole {
      * @return the prefix of the role, never null.
      */
     String getPrefix();
-
 
     /**
      * @return The weight of a guild role
@@ -73,39 +74,39 @@ public interface GuildRole {
      * Represents a permission associated with a guild role.
      * A permission defines a specific action or capability.
      */
-    interface Permission {
+    enum Permission {
+
+        //can ally/enemy other guilds
+        MANAGE_GUILD_RELATIONS("guilds.other_guild_relations", "Allows managing alliances and rivalries with other guilds"),
 
         //can invite
-        Permission INVITE_OUTSIDERS = of("guilds.guild.invite_outsiders", "Allows inviting outsiders to the guild");
+        INVITE_OUTSIDERS("guilds.guild.invite_outsiders", "Allows inviting outsiders to the guild"),
 
         //can kick
-        Permission KICK_MEMBER = of("guilds.member.kick", "Allows kicking members from the guild");
+        KICK_MEMBER("guilds.member.kick", "Allows kicking members from the guild"),
 
         //can modify role
-        Permission SET_ROLE_MEMBER = of("guilds.member.setrole", "Allows modifying the role of a guild member");
+        SET_ROLE_MEMBER("guilds.member.setrole", "Allows modifying the role of a guild member"),
 
         //can promote
-        Permission PROMOTE_MEMBER = of("guilds.member.promote", "Allows promoting a member to a higher role within the guild");
+        PROMOTE_MEMBER("guilds.member.promote", "Allows promoting a member to a higher role within the guild"),
 
         //can demote
-        Permission DEMOTE_MEMBER = of("guilds.member.demote", "Allows demoting a member to a lower role within the guild");
+        DEMOTE_MEMBER("guilds.member.demote", "Allows demoting a member to a lower role within the guild"),
 
         //can set tag
-        Permission SET_TAG = of("guilds.guild.set_tag", "Allows setting or changing the guild's tag");
+        SET_TAG("guilds.guild.set_tag", "Allows setting or changing the guild's tag"),
 
         //can rename
-        Permission RENAME_GUILD = of("guilds.guild.rename", "Allows renaming the guild");
+        RENAME_GUILD("guilds.guild.rename", "Allows renaming the guild");
 
+        private final String value;
+        private final String description;
 
-        Set<Permission> ALL = Set.of(
-                INVITE_OUTSIDERS,
-                KICK_MEMBER,
-                SET_ROLE_MEMBER,
-                PROMOTE_MEMBER,
-                DEMOTE_MEMBER,
-                SET_TAG,
-                RENAME_GUILD
-        );
+        Permission(String value, String description) {
+            this.value = value;
+            this.description = description;
+        }
 
         /**
          * Gets the value of the permission.
@@ -113,7 +114,9 @@ public interface GuildRole {
          *
          * @return the value of the permission, never null.
          */
-        String getValue();
+        public String getValue() {
+            return value;
+        }
 
         /**
          * Gets the description of the permission.
@@ -121,34 +124,29 @@ public interface GuildRole {
          *
          * @return the description of the permission, never null.
          */
-        String getDescription();
-
-        static Permission of(String value, String description) {
-            return new ImmutablePermission(value, description);
+        public String getDescription() {
+            return description;
         }
 
-        static @NotNull Permission from(String value) {
+        /**
+         * All available permissions.
+         */
+        public static final Set<Permission> ALL = EnumSet.allOf(Permission.class);
 
-            for(Permission permission : ALL) {
+        /**
+         * Gets a permission by its value.
+         *
+         * @param value the permission value to look up
+         * @return the permission with the specified value
+         * @throws IllegalArgumentException if no permission with the given value exists
+         */
+        public static @NotNull Permission from(String value) {
+            for (Permission permission : values()) {
                 if (permission.getValue().equals(value)) {
                     return permission;
                 }
             }
             throw new IllegalArgumentException("Unknown permission value: " + value);
         }
-
     }
-    record ImmutablePermission(String value, String description) implements Permission {
-        @Override
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public String getDescription() {
-            return description;
-        }
-    }
-
-
 }

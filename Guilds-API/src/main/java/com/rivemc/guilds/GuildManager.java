@@ -3,6 +3,7 @@ package com.rivemc.guilds;
 import com.rivemc.guilds.database.GuildStorage;
 import com.rivemc.guilds.database.GuildUpdateAction;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Optional;
 import java.util.UUID;
 

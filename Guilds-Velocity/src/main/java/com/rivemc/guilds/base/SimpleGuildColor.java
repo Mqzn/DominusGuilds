@@ -1,8 +1,8 @@
 package com.rivemc.guilds.base;
 
+import com.rivemc.guilds.GuildTag;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import com.rivemc.guilds.GuildTag;
 import org.jetbrains.annotations.NotNull;
 
 

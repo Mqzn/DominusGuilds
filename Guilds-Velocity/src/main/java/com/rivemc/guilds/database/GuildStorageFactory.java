@@ -4,7 +4,6 @@ import com.rivemc.guilds.Guild;
 import com.rivemc.guilds.RiveGuilds;
 import com.rivemc.guilds.database.storage.EmptyGuildStorage;
 import com.rivemc.guilds.database.storage.MongoGuildStorage;
-
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurationNode;

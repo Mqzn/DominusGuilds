@@ -7,10 +7,10 @@ import com.github.benmanes.caffeine.cache.RemovalListener;
 import com.rivemc.guilds.Guild;
 import com.rivemc.guilds.GuildInviteList;
 import com.rivemc.guilds.RiveGuilds;
-
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
