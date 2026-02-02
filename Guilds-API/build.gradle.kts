@@ -2,9 +2,12 @@ plugins {
     id("java")
 }
 
-group = "com.rivemc"
-version = "1.0-SNAPSHOT"
-
+group = "eg.mqzen"
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")

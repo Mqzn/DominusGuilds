@@ -1,4 +1,4 @@
-rootProject.name = 'RiveMC-Guilds'
+rootProject.name = 'DominusGuilds'
 include 'Guilds-API'
 include 'Guilds-Velocity'
 

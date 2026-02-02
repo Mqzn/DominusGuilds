@@ -1,4 +1,4 @@
-name: RiveGuilds
-version: 1.0
-main: com.rivemc.guilds.RiveGuilds
+name: DominusGuilds
+version: ${version}
+main: eg.mqzen.guilds.DominusGuilds
 author: Mqzen

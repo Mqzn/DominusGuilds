@@ -6,7 +6,7 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
-group = "com.rivemc"
-version = "1.0-SNAPSHOT"
+group = "eg.mqzen"
+version = "1.0.0"
 
 
