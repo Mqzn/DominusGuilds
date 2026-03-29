@@ -6,11 +6,11 @@ import eg.mqzen.guilds.DominusGuilds;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import eg.mqzen.guilds.database.GuildUpdateAction;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 
 import java.util.Optional;
 
@@ -21,9 +21,9 @@ public class LeaveSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
-    public void defaultUsage(VelocityPlayer source, @ContextResolved Guild<Player> sourceGuild) {
-        Optional<GuildMember<Player>> guildMemberOptional = sourceGuild.getMember(source.uuid());
+    @Execute
+    public void defaultUsage(VelocityPlayer source, @Context Guild<Player> sourceGuild) {
+        Optional<GuildMember<Player>> guildMemberOptional = sourceGuild.getMember(source.asPlayer().getUniqueId());
         if (guildMemberOptional.isEmpty()) {
             source.reply("<red>Some-weird happened in the JVM/Server runtime, your guild suddenly disappeared from existence!");
             source.reply("<red>Please contact an admin to resolve this matter.");

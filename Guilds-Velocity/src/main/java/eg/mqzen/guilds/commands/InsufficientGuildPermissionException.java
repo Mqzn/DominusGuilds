@@ -1,18 +1,18 @@
 package eg.mqzen.guilds.commands;
 
-import studio.mevera.imperat.ImperatConfig;
-import studio.mevera.imperat.context.Context;
-import studio.mevera.imperat.context.Source;
-import studio.mevera.imperat.exception.SelfHandledException;
+import studio.mevera.imperat.context.CommandContext;
+import studio.mevera.imperat.context.CommandSource;
+import studio.mevera.imperat.exception.SelfHandlingException;
 
-public class InsufficientGuildPermissionException extends SelfHandledException {
+public class InsufficientGuildPermissionException extends SelfHandlingException {
 
-    public InsufficientGuildPermissionException(Context<?> ctx) {
-        super(ctx);
+    public InsufficientGuildPermissionException() {
+        super();
     }
 
     @Override
-    public <S extends Source> void handle(ImperatConfig<S> imperat, Context<S> context) {
+    public <S extends CommandSource> void handle(CommandContext<S> context) {
         context.source().reply("<red>You don't have enough guild authority to do that!");
     }
+
 }

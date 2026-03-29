@@ -8,12 +8,12 @@ import eg.mqzen.guilds.base.SimpleGuildMember;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import eg.mqzen.guilds.database.GuildUpdateAction;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.Named;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,13 +27,13 @@ public class PromoteSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
+    @Execute
     public void defaultUsage(VelocityPlayer source) {
         source.reply("Usage: /guild promote <player>");
     }
 
-    @Usage
-    public void promote(VelocityPlayer source, @Named("target") Player target, @ContextResolved Guild<Player> sourceGuild) {
+    @Execute
+    public void promote(VelocityPlayer source, @Named("target") Player target, @Context Guild<Player> sourceGuild) {
         if (source == target) return;
 
         // Check if target is in a guild.
@@ -52,7 +52,7 @@ public class PromoteSubCommand {
         }
 
         // Check if source has permissions
-        Optional<GuildMember<Player>> sourceOptional = sourceGuild.getMember(source.uuid());
+        Optional<GuildMember<Player>> sourceOptional = sourceGuild.getMember(source.asPlayer().getUniqueId());
         Optional<GuildMember<Player>> targetOptional = sourceGuild.getMember(target.getUniqueId());
         if (sourceOptional.isEmpty() || targetOptional.isEmpty()) {
             source.reply("<red>Some-weird happened in the JVM/Server runtime, your guild suddenly disappeared from existence!");

@@ -5,13 +5,12 @@ import eg.mqzen.guilds.DominusGuilds;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import eg.mqzen.guilds.util.GuildMessageFormatter;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.Greedy;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.Execute;
+import studio.mevera.imperat.annotations.types.Greedy;
+import studio.mevera.imperat.annotations.types.SubCommand;
 
 import java.util.Optional;
 
@@ -22,13 +21,13 @@ public class ChatSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
+    @Execute
     public void defaultUsage(VelocityPlayer source) {
         source.reply("Usage: /guild chat <message>");
     }
 
-    @Usage
-    public void chat(VelocityPlayer source, @Greedy @Named("message") String message, @ContextResolved Guild<Player> sourceGuild) {
+    @Execute
+    public void chat(VelocityPlayer source, @Greedy String message, @Context Guild<Player> sourceGuild) {
         sourceGuild.getMembers().forEach(member -> {
             Optional<Player> playerOpt = plugin.getServer().getPlayer(member.getUUID());
             playerOpt.ifPresent(player ->

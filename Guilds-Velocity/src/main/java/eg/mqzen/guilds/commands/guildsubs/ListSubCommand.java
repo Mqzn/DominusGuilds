@@ -6,11 +6,11 @@ import eg.mqzen.guilds.GuildRole;
 import eg.mqzen.guilds.DominusGuilds;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 
 import java.util.List;
 import java.util.Map;
@@ -24,8 +24,8 @@ public class ListSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
-    public void listGuildMembers(VelocityPlayer source, @ContextResolved Guild<Player> guild) {
+    @Execute
+    public void listGuildMembers(VelocityPlayer source, @Context Guild<Player> guild) {
         // Group members by their roles
         Map<GuildRole, java.util.List<GuildMember<Player>>> membersByRole = guild.getMembers().stream()
                 .collect(Collectors.groupingBy(member -> guild.getRoleByID(member.getRoleId())

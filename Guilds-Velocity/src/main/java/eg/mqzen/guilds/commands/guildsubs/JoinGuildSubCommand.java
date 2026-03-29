@@ -6,11 +6,11 @@ import eg.mqzen.guilds.base.SimpleGuildMember;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.Named;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 
 import java.util.Optional;
 
@@ -21,15 +21,15 @@ public class JoinGuildSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
+    @Execute
     public void defaultUsage(VelocityPlayer source) {
         source.reply("Usage: /guild join <guild>");
     }
 
-    @Usage
+    @Execute
     public void acceptInvite(VelocityPlayer source, @Named("guild") String guildName) {
         // Check if player is already in a guild
-        if (plugin.getGuildManager().getPlayerGuild(source.uuid()).isPresent()) {
+        if (plugin.getGuildManager().getPlayerGuild(source.asPlayer().getUniqueId()).isPresent()) {
             source.reply("<red>You are already in a guild!");
             return;
         }
@@ -37,14 +37,14 @@ public class JoinGuildSubCommand {
         // Find guild by name
         plugin.getGuildManager().getGuildByName(guildName).ifPresentOrElse(guild -> {
             // Check if player was invited
-            if (!guild.getInviteList().isInvited(source.uuid())) {
+            if (!guild.getInviteList().isInvited(source.asPlayer().getUniqueId())) {
                 source.reply("<red>You have not been invited to this guild!");
                 return;
             }
 
             // Create new member with default role
             GuildMember<Player> newMember = new SimpleGuildMember(
-                    source.uuid(),
+                    source.asPlayer().getUniqueId(),
                     source.name(),
                     guild.getDefaultRole().getID()
             );
@@ -64,7 +64,7 @@ public class JoinGuildSubCommand {
                         });
 
                         // Remove invite
-                        updatedGuild.getInviteList().removeInvite(source.uuid());
+                        updatedGuild.getInviteList().removeInvite(source.asPlayer().getUniqueId());
                     });
 
         }, () -> source.reply("<red>Guild '" + guildName + "' not found!"));

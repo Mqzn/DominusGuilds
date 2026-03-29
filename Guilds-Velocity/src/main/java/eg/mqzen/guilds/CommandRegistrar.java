@@ -1,11 +1,12 @@
 package eg.mqzen.guilds;
 
-import eg.mqzen.guilds.commands.DurationParameterType;
+import eg.mqzen.guilds.commands.DurationArgumentType;
 import eg.mqzen.guilds.commands.GuildCommand;
 import eg.mqzen.guilds.commands.GuildContextResolver;
-import eg.mqzen.guilds.commands.GuildMemberParameterType;
+import eg.mqzen.guilds.commands.GuildMemberArgumentType;
 import eg.mqzen.guilds.commands.GuildQueryResult;
-import eg.mqzen.guilds.commands.GuildQueryResultParamType;
+import eg.mqzen.guilds.commands.GuildQueryResultArgumentType;
+import eg.mqzen.guilds.commands.NonGuildMembersSuggestionProvider;
 import eg.mqzen.guilds.commands.RequiredGuildPermissions;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.proxy.Player;
@@ -15,7 +16,6 @@ import studio.mevera.imperat.VelocityImperat;
 import studio.mevera.imperat.util.TypeWrap;
 
 import java.time.Duration;
-import java.util.stream.Collectors;
 
 public class CommandRegistrar {
     
@@ -26,22 +26,16 @@ public class CommandRegistrar {
         this.logger = logger;
         imperat = VelocityImperat.builder(plugin, server)
                 //.helpProvider(new GuildsHelpProvider())
-                .sourceResolver(VelocityPlayer.class, VelocityPlayer::new)
-                .parameterType(new TypeWrap<GuildMember<Player>>(){}.getType(), new GuildMemberParameterType(plugin))
-                .parameterType(Duration.class, new DurationParameterType())
-                .parameterType(GuildQueryResult.class, new GuildQueryResultParamType(plugin))
-                .contextResolver(new TypeWrap<Guild<Player>>(){}.getType(), new GuildContextResolver(plugin))
+                .sourceProvider(VelocityPlayer.class, (src, ctx)-> {
+                    return new VelocityPlayer(src);
+                })
+                .argType(new TypeWrap<GuildMember<Player>>(){}.getType(), new GuildMemberArgumentType(plugin))
+                .argType(Duration.class, new DurationArgumentType())
+                .argType(GuildQueryResult.class, new GuildQueryResultArgumentType(plugin))
+                .contextArgumentProvider(new TypeWrap<Guild<Player>>(){}.getType(), new GuildContextResolver(plugin))
                 .dependencyResolver(DominusGuilds.class, () -> plugin)
                 .dependencyResolver(GuildCommand.class, ()-> new GuildCommand(plugin))
-                .namedSuggestionResolver("non-guild-players", (context, name) -> {
-                    if (context.source().isConsole()) return server.getAllPlayers().stream().map(Player::getUsername).toList();
-                    Player sourcePlayer = context.source().asPlayer();
-                    return server.getAllPlayers().stream()
-                            .filter(p -> !p.getUniqueId().equals(sourcePlayer.getUniqueId()))
-                            .filter(p -> plugin.getGuildManager().getPlayerGuild(p).isEmpty())
-                            .map(Player::getUsername)
-                            .collect(Collectors.toList());
-                })
+                .dependencyResolver(NonGuildMembersSuggestionProvider.class, ()-> new NonGuildMembersSuggestionProvider(plugin, server))
                 .build();
     }
 

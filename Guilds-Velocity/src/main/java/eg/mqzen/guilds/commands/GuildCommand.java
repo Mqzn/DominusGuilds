@@ -25,18 +25,18 @@ import eg.mqzen.guilds.commands.guildsubs.TagSubCommand;
 import eg.mqzen.guilds.commands.guildsubs.ToggleSubCommand;
 import eg.mqzen.guilds.commands.guildsubs.DisbandSubCommand;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.VelocitySource;
-import studio.mevera.imperat.annotations.Command;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.ExternalSubCommand;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.VelocityCommandSource;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.ExternalSubCommand;
+import studio.mevera.imperat.annotations.types.Named;
+import studio.mevera.imperat.annotations.types.RootCommand;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 import studio.mevera.imperat.command.tree.help.CommandHelp;
 import studio.mevera.imperat.command.tree.help.HelpFilters;
 import studio.mevera.imperat.command.tree.help.HelpQuery;
 
-@Command(value = {"guild", "g", "clan", "c"})
+@RootCommand(value = {"guild", "g", "clan", "c"})
 @Description("Guild management commands")
 @ExternalSubCommand(
         {
@@ -73,7 +73,7 @@ public class GuildCommand {
 
     @SubCommand("create")
     @Description("Create a new guild")
-    public void createGuild(VelocitySource source, @Named("name") String guildName) {
+    public void createGuild(VelocityCommandSource source, @Named("name") String guildName) {
         if(source.isConsole()) {
             source.error("Only players can do this");
             return;
@@ -96,12 +96,11 @@ public class GuildCommand {
                 .onError(error -> source.error("Failed to create guild: " + error.getMessage()));
     }
     
-    @Usage
-    
+    @Execute
     @Description("Show guild information or help")
-    public void defaultCommand(VelocitySource source, CommandHelp<VelocitySource> help) {
+    public void defaultCommand(VelocityCommandSource source, CommandHelp<VelocityCommandSource> help) {
         help.display(
-                HelpQuery.<VelocitySource>builder()
+                HelpQuery.<VelocityCommandSource>builder()
                         .filter(HelpFilters.hasPermission(source, help))
                         .build(),
                 

@@ -2,17 +2,15 @@ package eg.mqzen.guilds.commands;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.VelocitySource;
-import studio.mevera.imperat.context.Context;
-import studio.mevera.imperat.context.Source;
-import studio.mevera.imperat.exception.OnlyPlayerAllowedException;
+import studio.mevera.imperat.VelocityCommandSource;
+import studio.mevera.imperat.exception.CommandException;
 
-public class VelocityPlayer implements Source {
-    private final VelocitySource source;
+public class VelocityPlayer implements studio.mevera.imperat.context.CommandSource {
+    private final VelocityCommandSource source;
     
-    public VelocityPlayer(VelocitySource source, Context<VelocitySource> context) throws OnlyPlayerAllowedException {
+    public VelocityPlayer(VelocityCommandSource source) throws CommandException {
         if(source.isConsole()) {
-            throw new OnlyPlayerAllowedException(context);
+            throw new CommandException("<red>Only players can do this!");
         }
         this.source = source;
     }

@@ -7,24 +7,22 @@ import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
-import studio.mevera.imperat.VelocitySource;
+import studio.mevera.imperat.VelocityCommandSource;
 import studio.mevera.imperat.command.Command;
-import studio.mevera.imperat.command.CommandUsage;
-import studio.mevera.imperat.command.parameters.CommandParameter;
+import studio.mevera.imperat.command.CommandPathway;
+import studio.mevera.imperat.command.arguments.Argument;
 import studio.mevera.imperat.command.tree.help.renderers.UsageFormatter;
 import studio.mevera.imperat.command.tree.help.theme.BaseHelpTheme;
 import studio.mevera.imperat.command.tree.help.theme.HelpComponent;
 import studio.mevera.imperat.command.tree.help.theme.HelpTheme;
 import studio.mevera.imperat.context.ExecutionContext;
 
-public class GuildHelpTheme extends BaseHelpTheme<VelocitySource, Component> {
+public class GuildHelpTheme extends BaseHelpTheme<VelocityCommandSource, Component> {
     
-    private final UsageFormatter<VelocitySource, Component> usageFormatter = new GuildUsageFormatter();
+    private final UsageFormatter<VelocityCommandSource, Component> usageFormatter = new GuildUsageFormatter();
     
     public GuildHelpTheme() {
         super(
-            PresentationStyle.FLAT,
-            1,
             HelpComponentCreator::createHelpComponent
         );
     }
@@ -35,27 +33,7 @@ public class GuildHelpTheme extends BaseHelpTheme<VelocitySource, Component> {
     }
     
     @Override
-    public @NotNull Component getBranchContent() {
-        return Component.text("├─ ");
-    }
-    
-    @Override
-    public @NotNull Component getLastBranchContent() {
-        return Component.text("└─ ");
-    }
-    
-    @Override
-    public @NotNull Component getIndentContent() {
-        return Component.text("│  ");
-    }
-    
-    @Override
-    public @NotNull Component getEmptyIndentContent() {
-        return Component.text("   ");
-    }
-    
-    @Override
-    public @NotNull Component getHeaderContent(ExecutionContext<VelocitySource> context) {
+    public @NotNull Component getHeaderContent(ExecutionContext<VelocityCommandSource> context) {
         // Create separate hyphen components (don't reuse the same instance)
         Component leftHyphen = Component.text("==========")
                 .decorate(TextDecoration.STRIKETHROUGH, TextDecoration.BOLD)
@@ -92,28 +70,28 @@ public class GuildHelpTheme extends BaseHelpTheme<VelocitySource, Component> {
     }
     
     @Override
-    public @NotNull Component getFooterContent(ExecutionContext<VelocitySource> context) {
+    public @NotNull Component getFooterContent(ExecutionContext<VelocityCommandSource> context) {
         return Component.text("==============================")
                 .decorate(TextDecoration.STRIKETHROUGH, TextDecoration.BOLD)
                 .color(TextColor.fromHexString("#282863"));
     }
     
     @Override
-    public @NotNull UsageFormatter<VelocitySource, Component> getUsageFormatter() {
+    public @NotNull UsageFormatter<VelocityCommandSource, Component> getUsageFormatter() {
         return usageFormatter;
     }
-    public static class GuildUsageFormatter implements UsageFormatter<VelocitySource, Component> {
+    public static class GuildUsageFormatter implements UsageFormatter<VelocityCommandSource, Component> {
         
         @Override
-        public @NotNull HelpComponent<VelocitySource, Component> format(
-                Command<VelocitySource> lastOwningCommand,
-                CommandUsage<VelocitySource> pathway,
-                ExecutionContext<VelocitySource> context,
-                HelpTheme<VelocitySource, Component> theme
+        public @NotNull HelpComponent<VelocityCommandSource, Component> format(
+                Command<VelocityCommandSource> lastOwningCommand,
+                CommandPathway<VelocityCommandSource> pathway,
+                ExecutionContext<VelocityCommandSource> context,
+                HelpTheme<VelocityCommandSource, Component> theme
         ) {
             String cmdPrefix = context.imperatConfig().commandPrefix();
             Component usageComponent = Component.text(cmdPrefix + context.command().format(), TextColor.fromHexString("#1f3b29"));
-            for(CommandParameter<VelocitySource> parameter : pathway.getParameters()) {
+            for(Argument<VelocityCommandSource> parameter : pathway.getArguments()) {
                 usageComponent = usageComponent
                         .appendSpace()
                         .append(formatParameter(context, parameter));
@@ -122,7 +100,7 @@ public class GuildHelpTheme extends BaseHelpTheme<VelocitySource, Component> {
             return HelpComponentCreator.createHelpComponent(usageComponent);
         }
         
-        private Component formatParameter(ExecutionContext<VelocitySource> context, CommandParameter<VelocitySource> parameter) {
+        private Component formatParameter(ExecutionContext<VelocityCommandSource> context, Argument<VelocityCommandSource> parameter) {
             var comp = Component.text(parameter.format());
             boolean hasParameterPermission = context.imperatConfig().getPermissionChecker().hasPermission(context.source(), parameter);
             if(!hasParameterPermission) {
@@ -139,10 +117,10 @@ public class GuildHelpTheme extends BaseHelpTheme<VelocitySource, Component> {
                 comp = comp.colorIfAbsent(TextColor.fromHexString("#90d17d"));
             }
             
-            if(!parameter.description().isEmpty()) {
+            if(!parameter.getDescription().isEmpty()) {
                 comp = comp.hoverEvent(
                         HoverEvent.showText(
-                                Component.text(parameter.description().toString())
+                                Component.text(parameter.getDescription().toString())
                                         .colorIfAbsent(NamedTextColor.GRAY)
                         )
                 );

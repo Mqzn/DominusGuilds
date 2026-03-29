@@ -3,6 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id("java")
     id("com.gradleup.shadow") version "8.3.2"
+
 }
 
 group = "eg.mqzen"
@@ -15,15 +16,12 @@ java {
 
 repositories {
     mavenCentral()
-    maven {
-        name = "central-snapshots"
-        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-    }
     //add paper mc repo
     maven {
         name = "papermc"
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
+
 
     maven {
         name = "alessiodpRepoSnapshots"
@@ -41,8 +39,11 @@ dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
     annotationProcessor("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
 
-    compileOnly("studio.mevera:imperat-core:2.4.2")
-    compileOnly("studio.mevera:imperat-velocity:2.4.2")
+    compileOnly("studio.mevera:imperat-core:3.1.0")
+    compileOnly("studio.mevera:imperat-velocity:3.1.0")
+
+    compileOnly("dev.dejvokep:boosted-yaml:1.3.6")
+    compileOnly("dev.dejvokep:boosted-yaml-spigot:1.5")
 
     compileOnly("org.mongodb:mongodb-driver-sync:5.3.1")
 
@@ -51,7 +52,6 @@ dependencies {
 
     //TODO add dependency runtime using libby for other dependencies
     implementation("com.alessiodp.libby:libby-velocity:2.0.0-SNAPSHOT")
-
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.2")
 
 }

@@ -6,10 +6,10 @@ import eg.mqzen.guilds.DominusGuilds;
 import eg.mqzen.guilds.commands.GuildQueryResult;
 import eg.mqzen.guilds.commands.RequiredGuildPermissions;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.VelocitySource;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.SubCommand;
+import studio.mevera.imperat.VelocityCommandSource;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.SubCommand;
 
 @SubCommand("enemy")
 @RequiredGuildPermissions(GuildRole.Permission.MANAGE_GUILD_RELATIONS)
@@ -19,7 +19,7 @@ public class EnemySubCommand {
     private DominusGuilds plugin;
 
     @SubCommand("add")
-    public void addEnemy(VelocitySource source, @ContextResolved Guild<Player> sourceGuild, GuildQueryResult queryResult) {
+    public void addEnemy(VelocityCommandSource source, @Context Guild<Player> sourceGuild, GuildQueryResult queryResult) {
         Guild<Player> foundGuild = queryResult.toGuild();
 
         if(foundGuild.getID().equals(sourceGuild.getID())) {
@@ -43,7 +43,7 @@ public class EnemySubCommand {
     }
 
     @SubCommand("remove")
-    public void removeEnemy(VelocitySource source, @ContextResolved Guild<Player> sourceGuild, GuildQueryResult queryResult) {
+    public void removeEnemy(VelocityCommandSource source, @Context Guild<Player> sourceGuild, GuildQueryResult queryResult) {
         Guild<Player> foundGuild = queryResult.toGuild();
         if(foundGuild.getID().equals(sourceGuild.getID())) {
             source.error("<red>You cannot un-enemy with your own guild");

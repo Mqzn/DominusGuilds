@@ -6,11 +6,11 @@ import eg.mqzen.guilds.GuildRole;
 import eg.mqzen.guilds.DominusGuilds;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -23,11 +23,11 @@ public class PermissionsSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
-    public void permissions(VelocityPlayer source, @ContextResolved Guild<Player> sourceGuild) {
+    @Execute
+    public void permissions(VelocityPlayer source, @Context Guild<Player> sourceGuild) {
         // Check if player is in a guild.
 
-        Optional<GuildMember<Player>> guildMemberOptional = sourceGuild.getMember(source.uuid());
+        Optional<GuildMember<Player>> guildMemberOptional = sourceGuild.getMember(source.asPlayer().getUniqueId());
         if(guildMemberOptional.isEmpty()){
             source.reply("<red>Some-weird happened in the JVM/Server runtime, your guild suddenly disappeared from existence!");
             source.reply("<red>Please contact an admin to resolve this matter.");

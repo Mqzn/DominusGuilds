@@ -5,11 +5,11 @@ import eg.mqzen.guilds.GuildMember;
 import eg.mqzen.guilds.DominusGuilds;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 
 import java.util.Optional;
 
@@ -20,9 +20,9 @@ public class ToggleSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
-    public void toggle(VelocityPlayer source, @ContextResolved Guild<Player> sourceGuild){
-        Optional<GuildMember<Player>> sourceMemberOptional = sourceGuild.getMember(source.uuid());
+    @Execute
+    public void toggle(VelocityPlayer source, @Context Guild<Player> sourceGuild){
+        Optional<GuildMember<Player>> sourceMemberOptional = sourceGuild.getMember(source.asPlayer().getUniqueId());
         if (sourceMemberOptional.isEmpty()) {
             source.reply("<red>Some-weird happened in the JVM/Server runtime, your guild suddenly disappeared from existence!");
             source.reply("<red>Please contact an admin to resolve this matter.");

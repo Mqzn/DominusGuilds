@@ -69,7 +69,7 @@ public final class DominusGuilds {
                 copyDefaultConfig("config.yml", configPath);
             }
             
-            ConfigurationLoader<@org.jetbrains.annotations.NotNull CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
+            ConfigurationLoader<CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
                     .path(configPath)
                     .build();
             config = loader.load();
@@ -87,7 +87,7 @@ public final class DominusGuilds {
                 copyDefaultConfig("database.yml", dbConfigPath);
             }
             
-            ConfigurationLoader<@org.jetbrains.annotations.NotNull CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
+            ConfigurationLoader<CommentedConfigurationNode> loader = YamlConfigurationLoader.builder()
                     .path(dbConfigPath)
                     .build();
             dbConfig = loader.load();

@@ -32,7 +32,7 @@ public interface DominusLibs {
     Library IMPERAT_CORE = Library.builder()
         .groupId("studio{}mevera")
         .artifactId("imperat-core")
-        .version("2.4.2")
+        .version("3.1.0")
         .resolveTransitiveDependencies(true)
         .relocate("studio{}mevera", "eg{}mqzen{}guilds{}libs{}studio{}mevera")
         .excludeTransitiveDependency("net{}kyori", "adventure-text-minimessage")
@@ -43,7 +43,7 @@ public interface DominusLibs {
         .repository(Repositories.MAVEN_CENTRAL)
         .groupId("studio{}mevera")
         .artifactId("imperat-velocity")
-        .version("2.4.2")
+        .version("3.1.0")
         .resolveTransitiveDependencies(true)
         .relocate("studio{}mevera", "eg{}mqzen{}guilds{}libs{}studio{}mevera") //eg.mqzen.guilds.libs.dev.velix
         .relocate("net{}kyori", "eg{}mqzen{}guilds{}libs{}net{}kyori")

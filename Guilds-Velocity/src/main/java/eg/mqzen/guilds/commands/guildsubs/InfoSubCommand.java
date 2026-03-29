@@ -5,11 +5,11 @@ import eg.mqzen.guilds.GuildRole;
 import eg.mqzen.guilds.DominusGuilds;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 
 @SubCommand("info")
 @Description("Displays your guild info")
@@ -18,15 +18,15 @@ public class InfoSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
-    public void info(VelocityPlayer source, @ContextResolved Guild<Player> sourceGuild) {
+    @Execute
+    public void info(VelocityPlayer source, @Context Guild<Player> sourceGuild) {
         // Traditional MiniMessage approach
         String message = buildMessage(source, sourceGuild);
         source.reply(message);
     }
 
     private String buildMessage(VelocityPlayer source, Guild<Player> sourceGuild) {
-        GuildRole playerRole = sourceGuild.getMemberRole(source.uuid());
+        GuildRole playerRole = sourceGuild.getMemberRole(source.asPlayer().getUniqueId());
 
         // Format the foundation date
         String foundationDate = formatFoundationDate(sourceGuild.getFoundationDate());

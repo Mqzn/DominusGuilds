@@ -5,12 +5,11 @@ import eg.mqzen.guilds.GuildMember;
 import eg.mqzen.guilds.DominusGuilds;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
-
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.Named;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +22,12 @@ public class FindSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
+    @Execute
     public void defaultUsage(VelocityPlayer source) {
         source.reply("Usage: /guild find <player>");
     }
 
-    @Usage
+    @Execute
     public void find(VelocityPlayer source, @Named("target") Player target) {
         if (source.asPlayer() == target) {
             source.reply("<red>Please use (/guild info) instead.");

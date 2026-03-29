@@ -2,15 +2,16 @@ package eg.mqzen.guilds.commands.guildsubs;
 
 import eg.mqzen.guilds.Guild;
 import eg.mqzen.guilds.DominusGuilds;
+import eg.mqzen.guilds.commands.NonGuildMembersSuggestionProvider;
 import eg.mqzen.guilds.commands.VelocityPlayer;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Description;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.SuggestionProvider;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Description;
+import studio.mevera.imperat.annotations.types.Named;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
+import studio.mevera.imperat.annotations.types.SuggestionProvider;
 
 import java.util.Optional;
 
@@ -21,17 +22,17 @@ public class InviteSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
+    @Execute
     public void defaultUsage(VelocityPlayer source) {
         source.reply("Usage: /guild invite <player>");
     }
 
-    @Usage
+    @Execute
     public void inviteToOwnGuild(
             VelocityPlayer source,
-            @ContextResolved Guild<Player> sourceGuild,
+            @Context Guild<Player> sourceGuild,
             @Named("target")
-            @SuggestionProvider("non-guild-players") String target
+            @SuggestionProvider(NonGuildMembersSuggestionProvider.class) String target
     ) {
         // Check if the target player is online on the proxy
         Optional<Player> playerOpt = plugin.getServer().getPlayer(target);

@@ -8,14 +8,14 @@ import eg.mqzen.guilds.commands.VelocityPlayer;
 import eg.mqzen.guilds.database.GuildUpdateAction;
 import eg.mqzen.guilds.util.DurationParser;
 import com.velocitypowered.api.proxy.Player;
-import studio.mevera.imperat.annotations.ContextResolved;
-import studio.mevera.imperat.annotations.Default;
-import studio.mevera.imperat.annotations.Dependency;
-import studio.mevera.imperat.annotations.Flag;
-import studio.mevera.imperat.annotations.Greedy;
-import studio.mevera.imperat.annotations.Named;
-import studio.mevera.imperat.annotations.SubCommand;
-import studio.mevera.imperat.annotations.Usage;
+import studio.mevera.imperat.annotations.types.Context;
+import studio.mevera.imperat.annotations.types.Default;
+import studio.mevera.imperat.annotations.types.Dependency;
+import studio.mevera.imperat.annotations.types.Flag;
+import studio.mevera.imperat.annotations.types.Greedy;
+import studio.mevera.imperat.annotations.types.Named;
+import studio.mevera.imperat.annotations.types.SubCommand;
+import studio.mevera.imperat.annotations.types.Execute;
 
 import java.time.Duration;
 
@@ -25,7 +25,7 @@ public class MOTDSubCommand {
     @Dependency
     DominusGuilds plugin;
 
-    @Usage
+    @Execute
     public void def(VelocityPlayer source) {
         source.reply("<gray>Please specify a message (MUST USE WITH QUOTATIONS)");
         source.reply("<green>Usage: <aqua>/guild motd <message> [duration]");
@@ -33,10 +33,10 @@ public class MOTDSubCommand {
         source.reply("<dark_aqua>Example <yellow>#2<dark_aqua>: <gray>/guild motd -time 1h \"Message Of the Day\"");
     }
 
-    @Usage
+    @Execute
     public void mainUsage(
             VelocityPlayer source,
-            @ContextResolved Guild<Player> sourceGuild,
+            @Context Guild<Player> sourceGuild,
             @Flag("time") @Default("24h") Duration time,
             @Named("message") @Greedy String message
     ) {

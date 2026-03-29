@@ -1,19 +1,19 @@
 package eg.mqzen.guilds.commands;
 
-import studio.mevera.imperat.ImperatConfig;
-import studio.mevera.imperat.context.Context;
-import studio.mevera.imperat.context.Source;
-import studio.mevera.imperat.exception.SelfHandledException;
+import studio.mevera.imperat.context.CommandContext;
+import studio.mevera.imperat.context.CommandSource;
+import studio.mevera.imperat.exception.SelfHandlingException;
 
-public class TargetNotInAnyGuildException extends SelfHandledException {
+
+public class TargetNotInAnyGuildException extends SelfHandlingException {
 
     private final String input;
-    public TargetNotInAnyGuildException(Context<?> ctx, String input) {
-        super(ctx);
+    public TargetNotInAnyGuildException(String input) {
+        super();
         this.input = input;
     }
 
-    @Override public <S extends Source> void handle(ImperatConfig<S> imperat, Context<S> context) {
+    @Override public <S extends CommandSource> void handle(CommandContext<S> context) {
         context.source().reply("<red>The specified target '" + input + "' is not in any guild!");
     }
 }
