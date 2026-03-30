@@ -2,13 +2,14 @@ package eg.mqzen.guilds;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Represents a member of a guild.
  * A guild member has a name, unique identifier, and a role within the guild.
  */
-public interface GuildMember<P> {
+public interface GuildMember<P> extends Serializable {
 
     /**
      * Gets the name of the guild member.

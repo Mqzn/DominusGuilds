@@ -4,11 +4,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 /**
  * Represents a tag associated with a guild.
  * A guild tag typically includes a plain text value and a color for display purposes.
  */
-public interface GuildTag {
+public interface GuildTag extends Serializable {
 
     /**
      * Gets the plain text value of the guild tag.

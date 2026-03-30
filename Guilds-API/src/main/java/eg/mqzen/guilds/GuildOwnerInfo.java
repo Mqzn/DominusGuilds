@@ -1,5 +1,6 @@
 package eg.mqzen.guilds;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -8,7 +9,7 @@ import java.util.UUID;
  * This interface provides methods to retrieve the owner's name and unique identifier (UUID).
  * </p>
  */
-public interface GuildOwnerInfo {
+public interface GuildOwnerInfo extends Serializable {
 
     /**
      * Retrieves the name of the guild owner.

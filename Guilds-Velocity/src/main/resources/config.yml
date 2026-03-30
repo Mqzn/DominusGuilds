@@ -1,0 +1,24 @@
+# Redis Configuration for Cross-Server Communication
+# This enables communication between Velocity proxy and Bukkit servers
+redis:
+  enabled: true
+  host: localhost
+  port: 6379
+  password: ""
+  database: 0
+  timeout: 2000
+  pool:
+    maxTotal: 8
+    maxIdle: 8
+    minIdle: 0
+
+# Server Settings
+settings:
+  # Default guild tag color
+  default-tag-color: "&7"
+  # Max guild name length
+  max-name-length: 20
+  # Max tag length
+  max-tag-length: 4
+  # Chat format
+  chat-format: "[{tag}] {player}: {message}"

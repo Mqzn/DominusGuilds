@@ -1,3 +1,5 @@
-name: RiveMC-Guilds
+name: Guilds-Bukkit
 version: ${version}
 main: eg.mqzen.guilds.DominusGuilds
+api-version: 1.20
+depend: [Guilds-API]

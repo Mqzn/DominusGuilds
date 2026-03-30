@@ -2,6 +2,7 @@ package eg.mqzen.guilds;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -10,7 +11,7 @@ import java.util.UUID;
  * Represents a list of players invited to a guild.
  * This interface provides methods to manage and query the invite list for a specific guild.
  */
-public interface GuildInviteList<P> {
+public interface GuildInviteList<P> extends Serializable {
 
     /**
      * Gets the guild associated with this invite list.

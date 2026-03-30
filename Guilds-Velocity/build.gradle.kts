@@ -32,6 +32,7 @@ repositories {
 
 dependencies {
     implementation(project(":Guilds-API"))
+    implementation("com.esotericsoftware:kryo:5.6.2")
     implementation("org.spongepowered:configurate-yaml:4.2.0")
 
     compileOnly("com.google.inject:guice:7.0.0")
@@ -53,6 +54,9 @@ dependencies {
     //TODO add dependency runtime using libby for other dependencies
     implementation("com.alessiodp.libby:libby-velocity:2.0.0-SNAPSHOT")
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.2")
+    
+    // Redis for cross-server communication
+    implementation("redis.clients:jedis:5.1.2")
 
 }
 
@@ -73,6 +77,7 @@ tasks.named<ShadowJar>("shadowJar") {
     relocate("org.bson", "eg.mqzen.guilds.libs.org.bson")
     //relocate("net.kyori", "eg.mqzen.guilds.libs.net.kyori")
     relocate("com.github.benmanes.caffeine", "eg.mqzen.guilds.libs.com.github.benmanes.caffeine")
+    relocate("redis.clients.jedis", "eg.mqzen.guilds.libs.redis.clients.jedis")
 }
 
 tasks.processResources {

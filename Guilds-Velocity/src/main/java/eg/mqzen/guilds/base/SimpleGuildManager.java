@@ -12,8 +12,10 @@ import eg.mqzen.guilds.GuildOwnerInfo;
 import eg.mqzen.guilds.GuildRole;
 import eg.mqzen.guilds.GuildTag;
 import eg.mqzen.guilds.DominusGuilds;
+import eg.mqzen.guilds.RedisGuildChannel;
 import eg.mqzen.guilds.database.GuildStorage;
 import eg.mqzen.guilds.database.GuildUpdateAction;
+import eg.mqzen.guilds.redis.VelocityGuildsRedisHandler;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
@@ -22,15 +24,12 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Getter
@@ -40,6 +39,7 @@ public final class SimpleGuildManager implements GuildManager<Player> {
     private final Logger logger;
     private final GuildStorage<Player> storage;
     private final DistinctTagTracker distinctTagTracker;
+    private final VelocityGuildsRedisHandler redisPublisher;
     final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     final Cache<UUID, Guild<Player>> guildsByUUID;
@@ -51,19 +51,20 @@ public final class SimpleGuildManager implements GuildManager<Player> {
     public SimpleGuildManager(
             DominusGuilds plugin,
             GuildStorage<Player> storage,
-            DistinctTagTracker distinctTagTracker
+            DistinctTagTracker distinctTagTracker,
+            VelocityGuildsRedisHandler redisPublisher
     ) {
         this.plugin = plugin;
         this.server = plugin.getServer();
         this.logger = plugin.getLogger();
         this.storage = storage;
         this.distinctTagTracker = distinctTagTracker;
+        this.redisPublisher = redisPublisher;
 
         this.guildsByUUID = setupGuildCache();
         this.guildsByName = setupNameCache();
         this.playerGuilds = setupPlayerCache();
 
-        initializeRedisSubscription();
         loadAllGuilds();
     }
 
@@ -93,28 +94,13 @@ public final class SimpleGuildManager implements GuildManager<Player> {
                 .build();
     }
 
-    private void initializeRedisSubscription() {
-        /*redisHandler.subscribeToGuildUpdates(message -> {
-            Guild<Player> guild = gson.fromJson(message.getGuildJson(), SimpleGuild.class);
-            switch (message.getAction()) {
-                case UPDATE -> updateGuildInCache(guild);
-                case DELETE -> removeGuildFromCache(guild.getID());
-            }
-        });*/
-    }
-
-    private void updateGuildInCache(Guild<Player> guild) {
-        guildsByUUID.put(guild.getID(), guild);
-        guildsByName.put(guild.getName().toLowerCase(), guild);
-        for (GuildMember<Player> member : guild.getMembers()) {
-            playerGuilds.put(member.getUUID(), guild);
+    private void useRedis(Consumer<VelocityGuildsRedisHandler> consumer) {
+        if (redisPublisher != null) {
+            consumer.accept(redisPublisher);
+        } else {
+            logger.warn("Redis publisher is not initialized. Redis functionality is disabled.");
         }
     }
-
-    private void removeGuildFromCache(UUID guildId) {
-        guildsByUUID.invalidate(guildId);
-    }
-    
 
     @Override
     public @NotNull Optional<Guild<Player>> getGuildByName(@NotNull String guildName) {
@@ -141,7 +127,7 @@ public final class SimpleGuildManager implements GuildManager<Player> {
                         playerGuilds.put(owner.getUUID(), guild);
                         distinctTagTracker.addTagFrom(guild);
 
-                        //useRedis(rm -> rm.publishGuildChange(GuildUpdateAction.CREATE_GUILD, savedGuild));
+                        useRedis(handler -> handler.publish(RedisGuildChannel.LOAD_GUILD_CACHE, this));
                     } finally {
                         lock.writeLock().unlock();
                     }
@@ -152,9 +138,7 @@ public final class SimpleGuildManager implements GuildManager<Player> {
     public FutureOperation<Void> deleteGuild(@NotNull Guild<Player> guild) {
         lock.writeLock().lock();
         try {
-            //we remove its members first
             guildsByUUID.invalidate(guild.getID());
-            //guildsByName.invalidate(guild.getName());
         } finally {
             lock.writeLock().unlock();
         }
@@ -162,11 +146,13 @@ public final class SimpleGuildManager implements GuildManager<Player> {
         var guildOwner = guild.getOwner();
         Optional<Player> guildOwnerPlayer = server.getPlayer(guildOwner.getUUID());
         
+        UUID guildId = guild.getID();
+        String guildName = guild.getName();
+        
         return FutureOperation.of(storage.delete(guild.getID()))
                 .sendErrorMessage(guildOwnerPlayer.orElse(null), "Failed to disband guild '" + guild.getName() + "'")
-                .onSuccess(()-> {
-                    //Publish to Redis
-                    //useRedis((rm)-> rm.publishGuildChange(GuildUpdateAction.DISBAND_GUILD, cloneGuild));
+                .onSuccess(() -> {
+                    useRedis(rm -> rm.publish(RedisGuildChannel.LOAD_GUILD_CACHE, this));
                 });
     }
 
@@ -288,7 +274,10 @@ public final class SimpleGuildManager implements GuildManager<Player> {
                         lock.writeLock().unlock();
                     }
                 }).thenCompose(guild -> {
-                    //useRedis( (rm)-> rm.publishGuildChange(updateAction, guild));
+                    useRedis(rm -> {
+                        rm.publish(RedisGuildChannel.LOAD_GUILD_CACHE, this);
+                    });
+                    
                     if (databaseUpdate) {
                         return storage.save(guild);
                     } else {
@@ -300,21 +289,11 @@ public final class SimpleGuildManager implements GuildManager<Player> {
 
     @Override
     public void publishGuildChatMessage(@NotNull Guild<Player> guild, @NotNull UUID senderId, @NotNull String message) {
-        //useRedis( (rm)-> rm.publishGuildChatMessage(guild, senderId, message));
-        
+        // Chat is handled locally through the proxy, no need to publish to Redis
     }
-
-    /*private void useRedis(Consumer<RedisConnectionHandler> consumer) {
-        if (redisHandler != null) {
-            consumer.accept(redisHandler);
-        } else {
-            logger.warn("Redis handler is not initialized. Redis functionality is disabled.");
-        }
-    }*/
 
     @Override
     public void publishGuildBroadcastMessage(@NotNull Guild<Player> guild, @NotNull String message) {
-        //useRedis( (rm)-> rm.publishGuildBroadcast(guild, message));
         for(GuildMember<Player> member : guild.getMembers()) {
             Optional<Player> playerOpt = server.getPlayer(member.getUUID());
             playerOpt.ifPresent(player -> player.sendRichMessage(message));
@@ -325,7 +304,7 @@ public final class SimpleGuildManager implements GuildManager<Player> {
      * Publishes a guild invite to the proxy server.
      * <p>
      * This method is used to send a guild invitation to a player who is not currently online
-     * on the same server. It utilizes the `guildRedisManager` to publish the invite information
+     * on the same server. It utilizes the Redis publisher to publish the invite information
      * to the proxy, which can then forward the invitation to the appropriate server where the
      * target player is located.
      *
@@ -335,7 +314,7 @@ public final class SimpleGuildManager implements GuildManager<Player> {
      */
     @Override
     public void publishInviteToProxy(@NotNull Player inviter, @NotNull String targetName, @NotNull Guild<Player> guild) {
-        //useRedis( (rm)-> rm.publishGuildInvite(inviter, targetName, guild));
+        // Invites are handled locally through the proxy
     }
 
     /**
@@ -405,6 +384,9 @@ public final class SimpleGuildManager implements GuildManager<Player> {
         } finally {
             lock.writeLock().unlock();
         }
+        
+        // Publish initial sync to Bukkit servers
+        useRedis(rm -> rm.publish(RedisGuildChannel.LOAD_GUILD_CACHE, this));
     }
 
     /**
@@ -465,5 +447,5 @@ public final class SimpleGuildManager implements GuildManager<Player> {
             lock.writeLock().unlock();
         }
     }
-}
 
+}

@@ -2,12 +2,14 @@ package eg.mqzen.guilds;
 
 import com.alessiodp.libby.VelocityLibraryManager;
 import com.google.inject.Inject;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import eg.mqzen.guilds.base.SimpleDistinctTagTracker;
 import eg.mqzen.guilds.base.SimpleGuildManager;
 import eg.mqzen.guilds.database.GuildStorage;
 import eg.mqzen.guilds.database.GuildStorageFactory;
 import eg.mqzen.guilds.listeners.ChatListener;
 import eg.mqzen.guilds.listeners.RegistryListener;
+import eg.mqzen.guilds.redis.VelocityGuildsRedisHandler;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
@@ -37,6 +39,7 @@ public final class DominusGuilds {
     
     private DistinctTagTracker tagTracker;
     private SimpleGuildManager guildManager;
+    private VelocityGuildsRedisHandler redisPublisher;
     
     @Inject
     public DominusGuilds(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -113,6 +116,24 @@ public final class DominusGuilds {
         DominusLibs.loadLibraries(libraryManager);
     }
     
+    private void initializeRedisPublisher() {
+        boolean redisEnabled = config.node("redis", "enabled").getBoolean(true);
+        if (redisEnabled) {
+            String host = config.node("redis", "host").getString("localhost");
+            int port = config.node("redis", "port").getInt(6379);
+            String password = config.node("redis", "password").getString("");
+            int database = config.node("redis", "database").getInt(0);
+            int timeout = config.node("redis", "timeout").getInt(2000);
+            
+            this.redisPublisher = new VelocityGuildsRedisHandler(host, port, password, database, timeout);
+            this.redisPublisher.initialize();
+            logger.info("Redis publisher initialized successfully");
+        } else {
+            logger.info("Redis is disabled in configuration");
+            this.redisPublisher = null;
+        }
+    }
+    
     private void injectDependencies() {
         //TODO inject storage and do other stuff.
         //do database first
@@ -120,7 +141,7 @@ public final class DominusGuilds {
         try {
             GuildStorage<Player> storage = (GuildStorage<Player>) storageFactory.createStorage(dbConfig);
             this.tagTracker = new SimpleDistinctTagTracker();
-            this.guildManager = new SimpleGuildManager(this, storage, tagTracker);
+            this.guildManager = new SimpleGuildManager(this, storage, tagTracker, redisPublisher);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -141,12 +162,20 @@ public final class DominusGuilds {
         try {
             initializeConfigurations();
             loadLibraries();
+            initializeRedisPublisher();
             injectDependencies();
             registerEventListeners();
             registerCommands();
             logger.info("Enabled DominusGuilds v1.0.0-SNAPSHOT successfully!");
         } catch (Exception e) {
             logger.error("Failed to initialize DominusGuilds", e);
+        }
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        if (this.redisPublisher != null) {
+            this.redisPublisher.shutdown();
         }
     }
     

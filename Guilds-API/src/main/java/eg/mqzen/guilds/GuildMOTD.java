@@ -2,6 +2,7 @@ package eg.mqzen.guilds;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.time.Duration;
 
 /**
@@ -9,7 +10,7 @@ import java.time.Duration;
  * join the server, the message will stop being sent after a specific duration of time
  * specified by {@link GuildMOTD#getExpiryDuration()}
  */
-public interface GuildMOTD {
+public interface GuildMOTD extends Serializable {
 
     /**
      * @return The message of the day.

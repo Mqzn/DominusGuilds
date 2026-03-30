@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
@@ -15,7 +16,7 @@ import java.util.function.Predicate;
  * Represents a guild in the system.
  * A guild is a group or organization with a unique identifier, name, tag, owner, and members.
  */
-public interface Guild<P> {
+public interface Guild<P> extends Serializable {
 
     /**
      * Gets the unique identifier of the guild.

@@ -4,6 +4,7 @@ import eg.mqzen.guilds.database.GuildStorage;
 import eg.mqzen.guilds.database.GuildUpdateAction;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
  * Manages guild operations, providing methods to create, delete, retrieve,
  * and update guilds. It also handles player invitations and chat message publishing.
  */
-public interface GuildManager<P> {
+public interface GuildManager<P> extends Serializable {
 
     /**
      * Retrieves a guild by its name.

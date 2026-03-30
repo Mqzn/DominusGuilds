@@ -2,6 +2,7 @@ package eg.mqzen.guilds;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.UUID;
  * Represents a role within a guild.
  * A guild role defines permissions and attributes for members assigned to it.
  */
-public interface GuildRole {
+public interface GuildRole extends Serializable {
 
     /**
      * Gets the unique identifier of the role.
